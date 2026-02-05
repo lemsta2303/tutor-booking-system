@@ -1,6 +1,7 @@
 package com.slemanski.backend.features.auth.service;
 
 import com.slemanski.backend.features.auth.model.MyUser;
+import com.slemanski.backend.features.auth.model.MyUserDetails;
 import com.slemanski.backend.features.auth.repository.MyUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,6 +9,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class AuthService {
@@ -33,9 +36,23 @@ public class AuthService {
     public String verify(MyUser user) {
         Authentication authentication =
                 authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        if(authentication.isAuthenticated()) {
-            return jwtService.generateToken(user.getUsername());
+
+        if(!authentication.isAuthenticated()) {
+            throw new RuntimeException("Invalid Login");
         }
-        return "Fail";
+
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+
+        String role = userDetails != null ? Objects.requireNonNull(userDetails
+                        .getAuthorities()
+                        .iterator()
+                        .next()
+                        .getAuthority())   // "ROLE_STUDENT"
+                        .replace("ROLE_", "") : null;
+
+        return jwtService.generateToken(
+                userDetails.getUsername(),
+                role
+        );
     }
 }

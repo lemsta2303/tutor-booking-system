@@ -21,9 +21,16 @@ public class MyUser {
     @Column(nullable = false, name="password")
     private String password;
 
-//    @Column(nullable = false, name="role")
-//    private Role role;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name="role")
+    private Role role;
 
+    @PrePersist
+    public void prePersist() {
+        if(role == null) {
+            role = Role.STUDENT;
+        }
+    }
 
     @Override
     public String toString() {
