@@ -21,5 +21,11 @@ public class AuthController {
         return authService.register(user);
     }
 
+    @PostMapping("/login")
+    public String login(@RequestBody MyUser user) {
+
+        return authService.verify(user);
+    }
+
 
 }
