@@ -12,8 +12,8 @@ import lombok.Setter;
 public class MyUser {
 
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Column(nullable = false, unique = true, name="username")
     private String username;
@@ -34,8 +34,3 @@ public class MyUser {
                 '}';
     }
 }
-
-//enum Role {
-//    Tutor,
-//    Student
-//}
