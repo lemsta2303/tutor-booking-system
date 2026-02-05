@@ -24,4 +24,14 @@ public class MyUserController {
     public List<MyUser> getAllUsers() {
         return this.myUserService.getAllUsers();
     }
+
+    @GetMapping("/tutor")
+    public String testGetForTutor() {
+        return "tutor only get";
+    }
+
+    @GetMapping("/student")
+    public String testGetForStudent() {
+        return "student only get";
+    }
 }
