@@ -1,11 +1,12 @@
 package com.slemanski.backend.features.auth.service;
 
+import com.slemanski.backend.features.auth.dto.RegisterRequestDto;
+import com.slemanski.backend.features.auth.exception.InvalidCredentialsException;
 import com.slemanski.backend.features.auth.exception.UserAlreadyExistsException;
 import com.slemanski.backend.infrastructure.security.jwt.JwtService;
 import com.slemanski.backend.features.auth.model.MyUser;
 import com.slemanski.backend.infrastructure.security.user.MyUserDetails;
 import com.slemanski.backend.features.auth.repository.MyUserRepository;
-import com.slemanski.backend.shared.exception.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,21 +32,28 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public MyUser register(MyUser user) {
-        if(myUserRepository.findByUsername(user.getUsername()) != null) {
-            throw new UserAlreadyExistsException(user.getUsername());
+    public void register(RegisterRequestDto userDto) {
+        if(myUserRepository.findByUsername(userDto.getUsername()) != null) {
+            throw new UserAlreadyExistsException(userDto.getUsername());
         }
-
-        user.setPassword(encoder.encode(user.getPassword()));
-        return myUserRepository.save(user);
+        MyUser newUser = new MyUser();
+        newUser.setUsername(userDto.getUsername());
+        newUser.setRole(userDto.getRole());
+        newUser.setPassword(encoder.encode(userDto.getPassword()));
+        myUserRepository.save(newUser);
     }
 
     public String verify(MyUser user) {
-        Authentication authentication =
-                authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        Authentication authentication;
+        try {
+            authentication =
+                    authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        } catch(Exception exc) {
+            throw new InvalidCredentialsException();
+        }
 
         if(!authentication.isAuthenticated()) {
-            throw new RuntimeException("Invalid Login");
+            throw new InvalidCredentialsException();
         }
 
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();

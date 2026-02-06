@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT),
-    HEHE_HEHE(HttpStatus.UNAUTHORIZED);
+    INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED);
 
     private final HttpStatus status;
 

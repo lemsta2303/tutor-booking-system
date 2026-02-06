@@ -2,6 +2,7 @@ package com.slemanski.backend.shared.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -17,6 +18,18 @@ public class GlobalExceptionHandler {
         error.setTimeStamp(System.currentTimeMillis());
 
         return new ResponseEntity<>(error, exc.getErrorCode().status());
+    }
+
+    //validation error handling
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException exc) {
+        ErrorResponse error = new ErrorResponse();
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setErrorCode("VALIDATION_ERROR");
+        error.setMessage("Validation failed");
+        error.setTimeStamp(System.currentTimeMillis());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     // fallback for exceptions beside rest pai
