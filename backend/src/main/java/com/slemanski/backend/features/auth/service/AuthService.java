@@ -1,5 +1,6 @@
 package com.slemanski.backend.features.auth.service;
 
+import com.slemanski.backend.features.auth.dto.LoginRequestDto;
 import com.slemanski.backend.features.auth.dto.RegisterRequestDto;
 import com.slemanski.backend.features.auth.exception.InvalidCredentialsException;
 import com.slemanski.backend.features.auth.exception.UserAlreadyExistsException;
@@ -43,11 +44,11 @@ public class AuthService {
         myUserRepository.save(newUser);
     }
 
-    public String verify(MyUser user) {
+    public String verify(LoginRequestDto userDto) {
         Authentication authentication;
         try {
             authentication =
-                    authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+                    authManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
         } catch(Exception exc) {
             throw new InvalidCredentialsException();
         }

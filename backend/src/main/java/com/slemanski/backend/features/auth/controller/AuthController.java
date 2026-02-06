@@ -1,7 +1,7 @@
 package com.slemanski.backend.features.auth.controller;
 
+import com.slemanski.backend.features.auth.dto.LoginRequestDto;
 import com.slemanski.backend.features.auth.dto.RegisterRequestDto;
-import com.slemanski.backend.features.auth.model.MyUser;
 import com.slemanski.backend.features.auth.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody MyUser user) {
+    public String login(@RequestBody LoginRequestDto user) {
         return authService.verify(user);
     }
 

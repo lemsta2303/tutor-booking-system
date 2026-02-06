@@ -24,8 +24,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException exc) {
         ErrorResponse error = new ErrorResponse();
-        error.setStatus(HttpStatus.BAD_REQUEST.value());
-        error.setErrorCode("VALIDATION_ERROR");
+        ErrorCode errorCode = ErrorCode.VALIDATION_ERROR;
+        error.setStatus(errorCode.status().value());
+        error.setErrorCode(errorCode.name());
         error.setMessage("Validation failed");
         error.setTimeStamp(System.currentTimeMillis());
 
@@ -36,9 +37,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleAnyException(Exception exc) {
         ErrorResponse error = new ErrorResponse();
+        ErrorCode errorCode = ErrorCode.INTERNAL_ERROR;
         error.setMessage("Unexpected error");
-        error.setErrorCode("INTERNAL_ERROR");
-        error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setStatus(errorCode.status().value());
+        error.setErrorCode(errorCode.name());
         error.setTimeStamp(System.currentTimeMillis());
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
