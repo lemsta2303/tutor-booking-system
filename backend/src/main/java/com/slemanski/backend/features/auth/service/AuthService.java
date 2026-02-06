@@ -1,9 +1,11 @@
 package com.slemanski.backend.features.auth.service;
 
+import com.slemanski.backend.features.auth.exception.UserAlreadyExistsException;
 import com.slemanski.backend.infrastructure.security.jwt.JwtService;
 import com.slemanski.backend.features.auth.model.MyUser;
 import com.slemanski.backend.infrastructure.security.user.MyUserDetails;
 import com.slemanski.backend.features.auth.repository.MyUserRepository;
+import com.slemanski.backend.shared.exception.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,22 +18,26 @@ import java.util.Objects;
 @Service
 public class AuthService {
 
-    private MyUserRepository repo;
-    private AuthenticationManager authManager;
-    private JwtService jwtService;
+    private final MyUserRepository myUserRepository;
+    private final AuthenticationManager authManager;
+    private final JwtService jwtService;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     @Autowired
     public AuthService(MyUserRepository repo, AuthenticationManager authManager, JwtService jwtService) {
-        this.repo = repo;
+        this.myUserRepository = repo;
         this.authManager = authManager;
         this.jwtService = jwtService;
     }
 
     public MyUser register(MyUser user) {
+        if(myUserRepository.findByUsername(user.getUsername()) != null) {
+            throw new UserAlreadyExistsException(user.getUsername());
+        }
+
         user.setPassword(encoder.encode(user.getPassword()));
-        return repo.save(user);
+        return myUserRepository.save(user);
     }
 
     public String verify(MyUser user) {
