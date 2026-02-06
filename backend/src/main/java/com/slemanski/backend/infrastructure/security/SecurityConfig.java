@@ -1,5 +1,6 @@
-package com.slemanski.backend.config;
+package com.slemanski.backend.infrastructure.security;
 
+import com.slemanski.backend.infrastructure.security.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

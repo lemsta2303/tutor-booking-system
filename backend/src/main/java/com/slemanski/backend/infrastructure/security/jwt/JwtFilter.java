@@ -1,8 +1,6 @@
-package com.slemanski.backend.config;
+package com.slemanski.backend.infrastructure.security.jwt;
 
-import com.slemanski.backend.features.auth.model.MyUserDetails;
-import com.slemanski.backend.features.auth.service.JWTService;
-import com.slemanski.backend.features.auth.service.MyUserDetailsService;
+import com.slemanski.backend.infrastructure.security.user.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +11,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,11 +20,11 @@ import java.io.IOException;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private JWTService jwtService;
+    private JwtService jwtService;
     private ApplicationContext context;
 
     @Autowired
-    public JwtFilter(JWTService jwtService, ApplicationContext context) {
+    public JwtFilter(JwtService jwtService, ApplicationContext context) {
         this.jwtService = jwtService;
         this.context = context;
     }

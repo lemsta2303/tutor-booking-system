@@ -1,7 +1,6 @@
-package com.slemanski.backend.features.auth.service;
+package com.slemanski.backend.infrastructure.security.user;
 
 import com.slemanski.backend.features.auth.model.MyUser;
-import com.slemanski.backend.features.auth.model.MyUserDetails;
 import com.slemanski.backend.features.auth.repository.MyUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

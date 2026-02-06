@@ -1,4 +1,4 @@
-package com.slemanski.backend.features.auth.service;
+package com.slemanski.backend.infrastructure.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -17,11 +17,11 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JWTService {
+public class JwtService {
 
     String secretKey = "";
 
-    public JWTService() {
+    public JwtService() {
         try{
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
             SecretKey sk = keyGen.generateKey();
