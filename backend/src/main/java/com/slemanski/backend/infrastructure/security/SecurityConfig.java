@@ -37,9 +37,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(request-> request
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/user/student/**").hasRole("STUDENT")
-                        .requestMatchers("/user/tutor/**").hasRole("TUTOR")
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/user/student/**").hasRole("STUDENT")
+                        .requestMatchers("/api/user/tutor/**").hasRole("TUTOR")
                         .anyRequest().authenticated())
                 .httpBasic(basic -> basic.disable())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

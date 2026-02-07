@@ -4,10 +4,16 @@ import com.slemanski.backend.features.auth.dto.LoginRequestDto;
 import com.slemanski.backend.features.auth.dto.RegisterRequestDto;
 import com.slemanski.backend.features.auth.exception.InvalidCredentialsException;
 import com.slemanski.backend.features.auth.exception.UserAlreadyExistsException;
+import com.slemanski.backend.features.auth.model.Role;
+import com.slemanski.backend.features.students.model.StudentProfile;
+import com.slemanski.backend.features.students.repository.StudentProfileRepository;
+import com.slemanski.backend.features.tutors.model.TutorProfile;
+import com.slemanski.backend.features.tutors.repository.TutorProfileRepository;
 import com.slemanski.backend.infrastructure.security.jwt.JwtService;
 import com.slemanski.backend.features.auth.model.MyUser;
 import com.slemanski.backend.infrastructure.security.user.MyUserDetails;
 import com.slemanski.backend.features.auth.repository.MyUserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,23 +31,41 @@ public class AuthService {
     private final JwtService jwtService;
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private final StudentProfileRepository studentProfileRepository;
+    private final TutorProfileRepository tutorProfileRepository;
 
     @Autowired
-    public AuthService(MyUserRepository repo, AuthenticationManager authManager, JwtService jwtService) {
+    public AuthService(MyUserRepository repo, AuthenticationManager authManager, JwtService jwtService, StudentProfileRepository studentProfileRepository, TutorProfileRepository tutorProfileRepository) {
         this.myUserRepository = repo;
         this.authManager = authManager;
         this.jwtService = jwtService;
+        this.studentProfileRepository = studentProfileRepository;
+        this.tutorProfileRepository = tutorProfileRepository;
     }
 
+    @Transactional
     public void register(RegisterRequestDto userDto) {
         if(myUserRepository.findByUsername(userDto.getUsername()) != null) {
             throw new UserAlreadyExistsException(userDto.getUsername());
         }
         MyUser newUser = new MyUser();
+        Role userRole = userDto.getRole();
         newUser.setUsername(userDto.getUsername());
-        newUser.setRole(userDto.getRole());
         newUser.setPassword(encoder.encode(userDto.getPassword()));
+        newUser.setRole(userRole);
+
         myUserRepository.save(newUser);
+
+        if(userRole == Role.STUDENT) {
+            StudentProfile newStudentProfile = new StudentProfile();
+            newStudentProfile.setUser(newUser);
+            studentProfileRepository.save(newStudentProfile);
+        } else {
+            TutorProfile newTutorProfile = new TutorProfile();
+            newTutorProfile.setUser(newUser);
+            tutorProfileRepository.save(newTutorProfile);
+        }
+
     }
 
     public String verify(LoginRequestDto userDto) {
@@ -71,4 +95,19 @@ public class AuthService {
                 role
         );
     }
+
+//    public void setRole(MyUser user, Role newRole) {
+//
+//        if(newRole == Role.STUDENT) {
+//            StudentProfile newStudentProfile = new StudentProfile();
+//            newStudentProfile.setUser(user);
+//            studentProfileRepository.save(newStudentProfile);
+//        } else {
+//            TutorProfile newTutorProfile = new TutorProfile();
+//            newTutorProfile.setUser(user);
+//            tutorProfileRepository.save(newTutorProfile);
+//        }
+//        user.setRole(newRole);
+//    }
+
 }

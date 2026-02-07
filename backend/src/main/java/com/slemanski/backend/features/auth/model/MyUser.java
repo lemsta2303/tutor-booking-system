@@ -1,5 +1,7 @@
 package com.slemanski.backend.features.auth.model;
 
+import com.slemanski.backend.features.students.model.StudentProfile;
+import com.slemanski.backend.features.tutors.model.TutorProfile;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,19 +27,10 @@ public class MyUser {
     @Column(nullable = false, name="role")
     private Role role;
 
-    @PrePersist
-    public void prePersist() {
-        if(role == null) {
-            role = Role.STUDENT;
-        }
-    }
+    @OneToOne(mappedBy = "user")
+    private TutorProfile tutorProfile;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
+    @OneToOne(mappedBy = "user")
+    private StudentProfile studentProfile;
+
 }
