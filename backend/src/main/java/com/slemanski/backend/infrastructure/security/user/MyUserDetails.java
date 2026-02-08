@@ -51,4 +51,12 @@ public class MyUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public long getId() {
+        return user.getId();
+    }
+
+    public MyUser getUser() {
+        return this.user;
+    }
 }

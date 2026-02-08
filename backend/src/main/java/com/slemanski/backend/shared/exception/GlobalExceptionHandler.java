@@ -33,12 +33,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // fallback for exceptions beside rest pai
+    // fallback for other exceptions
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleAnyException(Exception exc) {
         ErrorResponse error = new ErrorResponse();
         ErrorCode errorCode = ErrorCode.INTERNAL_ERROR;
-        error.setMessage("Unexpected error");
+        error.setMessage(exc.getMessage());
         error.setStatus(errorCode.status().value());
         error.setErrorCode(errorCode.name());
         error.setTimeStamp(System.currentTimeMillis());

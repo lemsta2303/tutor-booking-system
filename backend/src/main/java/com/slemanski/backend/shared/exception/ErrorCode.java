@@ -1,6 +1,5 @@
 package com.slemanski.backend.shared.exception;
 
-import org.springframework.boot.micrometer.observation.autoconfigure.ObservationProperties;
 import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {

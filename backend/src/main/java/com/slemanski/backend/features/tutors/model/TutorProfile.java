@@ -18,7 +18,7 @@ public class TutorProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long tutorId;
 
     @Column(name="subject")
     private Subject subject;

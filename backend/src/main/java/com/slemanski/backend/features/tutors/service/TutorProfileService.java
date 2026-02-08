@@ -21,11 +21,11 @@ public class TutorProfileService {
         return repository.findAll();
     }
 
-    public TutorProfile getTutorProfileById(long id) {
+    public TutorProfile getTutorProfileById(long tutorId) {
 
-        Optional<TutorProfile> foundProfile = this.repository.findById(id);
+        Optional<TutorProfile> foundProfile = this.repository.findById(tutorId);
         if(foundProfile.isEmpty()) {
-            throw new TutorNotFoundException(id);
+            throw new TutorNotFoundException(tutorId);
         }
 
         return foundProfile.get();
