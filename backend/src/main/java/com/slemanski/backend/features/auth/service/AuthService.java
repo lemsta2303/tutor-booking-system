@@ -1,6 +1,7 @@
 package com.slemanski.backend.features.auth.service;
 
 import com.slemanski.backend.features.auth.dto.LoginRequestDto;
+import com.slemanski.backend.features.auth.dto.LoginResponseDto;
 import com.slemanski.backend.features.auth.dto.RegisterRequestDto;
 import com.slemanski.backend.features.auth.exception.InvalidCredentialsException;
 import com.slemanski.backend.features.auth.exception.UserAlreadyExistsException;
@@ -68,7 +69,7 @@ public class AuthService {
 
     }
 
-    public String verify(LoginRequestDto userDto) {
+    public LoginResponseDto verify(LoginRequestDto userDto) {
         Authentication authentication;
         try {
             authentication =
@@ -90,24 +91,8 @@ public class AuthService {
                         .getAuthority())
                         .replace("ROLE_", "") : null;
 
-        return jwtService.generateToken(
-                userDetails.getUsername(),
-                role
-        );
+        String token = jwtService.generateToken(userDetails.getUsername(), role);
+
+        return new LoginResponseDto(token);
     }
-
-//    public void setRole(MyUser user, Role newRole) {
-//
-//        if(newRole == Role.STUDENT) {
-//            StudentProfile newStudentProfile = new StudentProfile();
-//            newStudentProfile.setUser(user);
-//            studentProfileRepository.save(newStudentProfile);
-//        } else {
-//            TutorProfile newTutorProfile = new TutorProfile();
-//            newTutorProfile.setUser(user);
-//            tutorProfileRepository.save(newTutorProfile);
-//        }
-//        user.setRole(newRole);
-//    }
-
 }

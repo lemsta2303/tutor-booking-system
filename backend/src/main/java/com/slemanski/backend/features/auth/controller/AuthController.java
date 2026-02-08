@@ -1,6 +1,7 @@
 package com.slemanski.backend.features.auth.controller;
 
 import com.slemanski.backend.features.auth.dto.LoginRequestDto;
+import com.slemanski.backend.features.auth.dto.LoginResponseDto;
 import com.slemanski.backend.features.auth.dto.RegisterRequestDto;
 import com.slemanski.backend.features.auth.service.AuthService;
 import jakarta.validation.Valid;
@@ -34,8 +35,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequestDto user) {
-        return authService.verify(user);
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto user) {
+
+        LoginResponseDto response = authService.verify(user);
+        return ResponseEntity.ok(response);
     }
 
 

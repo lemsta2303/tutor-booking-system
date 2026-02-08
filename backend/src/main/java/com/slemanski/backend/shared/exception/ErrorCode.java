@@ -7,7 +7,8 @@ public enum ErrorCode {
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT),
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR),
-    VALIDATION_ERROR(HttpStatus.BAD_REQUEST);
+    VALIDATION_ERROR(HttpStatus.BAD_REQUEST),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND);
 
 
     private final HttpStatus status;
