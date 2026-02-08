@@ -7,8 +7,8 @@ public enum ErrorCode {
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND);
-
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND),
+    ACCESS_DENIED(HttpStatus.FORBIDDEN);
 
     private final HttpStatus status;
 

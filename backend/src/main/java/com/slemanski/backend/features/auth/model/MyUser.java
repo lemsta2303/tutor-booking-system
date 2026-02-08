@@ -33,4 +33,15 @@ public class MyUser {
     @OneToOne(mappedBy = "user")
     private StudentProfile studentProfile;
 
+    @Override
+    public String toString() {
+        return "MyUser{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                ", tutorProfile=" + tutorProfile +
+                ", studentProfile=" + studentProfile +
+                '}';
+    }
 }
