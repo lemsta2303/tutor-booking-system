@@ -2,18 +2,19 @@ package com.slemanski.backend.features.timeslots.service;
 
 import com.slemanski.backend.features.auth.model.MyUser;
 import com.slemanski.backend.features.timeslots.dto.TimeSlotCreateDto;
-import com.slemanski.backend.features.timeslots.dto.TimeSlotDeleteDto;
-import com.slemanski.backend.shared.exception.exception.AccessDeniedException;
-import com.slemanski.backend.shared.exception.exception.InvalidParamsException;
-import com.slemanski.backend.shared.exception.exception.UserNotFoundException;
+import com.slemanski.backend.features.timeslots.dto.TimeSlotSummaryDto;
 import com.slemanski.backend.features.timeslots.model.TimeSlot;
 import com.slemanski.backend.features.timeslots.repository.TimeSlotRepository;
 import com.slemanski.backend.features.tutors.model.TutorProfile;
 import com.slemanski.backend.features.tutors.repository.TutorProfileRepository;
-import jakarta.validation.Valid;
+import com.slemanski.backend.shared.exception.exception.AccessDeniedException;
+import com.slemanski.backend.shared.exception.exception.InvalidParamsException;
+import com.slemanski.backend.shared.exception.exception.UserNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -80,4 +81,12 @@ public class TimeSlotService {
     }
 
 
+    public List<TimeSlot> getTimeSlotsOfTutor(long tutorId) {
+
+        Optional<TutorProfile> tutorProfile = tutorProfileRepository.findById(tutorId);
+        if(tutorProfile.isEmpty()){
+            throw new UserNotFoundException();
+        }
+        return tutorProfile.get().getTimeSlots();
+    }
 }
