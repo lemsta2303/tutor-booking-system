@@ -8,7 +8,9 @@ public enum ErrorCode {
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR),
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND),
-    ACCESS_DENIED(HttpStatus.FORBIDDEN);
+    RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND),
+    ACCESS_DENIED(HttpStatus.FORBIDDEN),
+    CONFLICT(HttpStatus.CONFLICT);
 
     private final HttpStatus status;
 

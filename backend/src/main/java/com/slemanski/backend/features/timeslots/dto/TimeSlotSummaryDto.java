@@ -7,13 +7,15 @@ import java.time.LocalDateTime;
 public record TimeSlotSummaryDto(
         long id,
         LocalDateTime startTime,
-        LocalDateTime endTime
+        LocalDateTime endTime,
+        boolean isAvailable
 ) {
     public static TimeSlotSummaryDto from(TimeSlot timeslot) {
         return new TimeSlotSummaryDto(
                 timeslot.getId(),
                 timeslot.getStartTime(),
-                timeslot.getEndTime()
+                timeslot.getEndTime(),
+                timeslot.getBooking() == null
         );
     }
 }

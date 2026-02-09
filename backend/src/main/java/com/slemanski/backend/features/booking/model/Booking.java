@@ -3,9 +3,13 @@ package com.slemanski.backend.features.booking.model;
 import com.slemanski.backend.features.students.model.StudentProfile;
 import com.slemanski.backend.features.timeslots.model.TimeSlot;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name="booking")
+@Getter
+@Setter
 public class Booking {
 
     @Id
@@ -19,10 +23,6 @@ public class Booking {
     @OneToOne(optional = false)
     @JoinColumn(name="time_slot_id", nullable=false, unique = true)
     private TimeSlot timeSlot;
-
-
-
-
 
 
 }

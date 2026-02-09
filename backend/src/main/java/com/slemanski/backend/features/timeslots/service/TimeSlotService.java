@@ -2,7 +2,6 @@ package com.slemanski.backend.features.timeslots.service;
 
 import com.slemanski.backend.features.auth.model.MyUser;
 import com.slemanski.backend.features.timeslots.dto.TimeSlotCreateDto;
-import com.slemanski.backend.features.timeslots.dto.TimeSlotSummaryDto;
 import com.slemanski.backend.features.timeslots.model.TimeSlot;
 import com.slemanski.backend.features.timeslots.repository.TimeSlotRepository;
 import com.slemanski.backend.features.tutors.model.TutorProfile;
@@ -10,7 +9,7 @@ import com.slemanski.backend.features.tutors.repository.TutorProfileRepository;
 import com.slemanski.backend.shared.exception.exception.AccessDeniedException;
 import com.slemanski.backend.shared.exception.exception.InvalidParamsException;
 import com.slemanski.backend.shared.exception.exception.UserNotFoundException;
-import org.springframework.http.ResponseEntity;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -31,6 +30,7 @@ public class TimeSlotService {
         this.tutorProfileRepository = tutorProfileRepository;
     }
 
+    @Transactional
     public void createTimeSlot(TimeSlotCreateDto dto, MyUser user) throws UserNotFoundException {
         TutorProfile tutor = tutorProfileRepository.findByUser(user);
         validateNewSlotParams(dto, tutor);
@@ -43,6 +43,7 @@ public class TimeSlotService {
         timeSlotRepository.save(newTimeSlot);
     }
 
+    @Transactional
     public void deleteTimeSlot(long timeSlotId, MyUser user) {
         Optional<TimeSlot> timeSlotToDelete = timeSlotRepository.findById(timeSlotId);
 
@@ -57,6 +58,14 @@ public class TimeSlotService {
         // Maybe check if slot is booked in the future and throw exception if it is.
 
         this.timeSlotRepository.delete(timeSlotToDelete.get());
+    }
+
+    public List<TimeSlot> getTimeSlotsOfTutor(long tutorId) {
+        Optional<TutorProfile> tutorProfile = tutorProfileRepository.findById(tutorId);
+        if(tutorProfile.isEmpty()){
+            throw new UserNotFoundException();
+        }
+        return tutorProfile.get().getTimeSlots();
     }
 
     public void validateNewSlotParams(TimeSlotCreateDto dto, TutorProfile tutor) {
@@ -78,15 +87,5 @@ public class TimeSlotService {
         if(ifNewSlotOverlapWithSomeOther) {
             throw new InvalidParamsException("Time slot overlaps existing slots.");
         }
-    }
-
-
-    public List<TimeSlot> getTimeSlotsOfTutor(long tutorId) {
-
-        Optional<TutorProfile> tutorProfile = tutorProfileRepository.findById(tutorId);
-        if(tutorProfile.isEmpty()){
-            throw new UserNotFoundException();
-        }
-        return tutorProfile.get().getTimeSlots();
     }
 }
