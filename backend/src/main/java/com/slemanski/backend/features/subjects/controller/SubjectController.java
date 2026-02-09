@@ -1,7 +1,7 @@
 package com.slemanski.backend.features.subjects.controller;
 
-import com.slemanski.backend.features.subjects.model.Subject;
 import com.slemanski.backend.features.subjects.dto.SubjectDto;
+import com.slemanski.backend.features.subjects.model.Subject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

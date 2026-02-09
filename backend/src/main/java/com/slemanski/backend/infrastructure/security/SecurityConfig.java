@@ -2,8 +2,10 @@ package com.slemanski.backend.infrastructure.security;
 
 import com.slemanski.backend.infrastructure.security.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -24,6 +26,9 @@ public class SecurityConfig {
     private UserDetailsService userDetailsService;
     private JwtFilter jwtFilter;
 
+    @Value("${security.password.bcrypt.strength}")
+    private int bcryptStrength;
+
     @Autowired
     public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter) {
         this.userDetailsService = userDetailsService;
@@ -37,11 +42,22 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(request-> request
-//                        .requestMatchers("/api/auth/**").permitAll()
-//                        .requestMatchers("/api/user/student/**").hasRole("STUDENT")
-//                        .requestMatchers("/api/user/tutor/**").hasRole("TUTOR")
-//                        .anyRequest().authenticated())
-                        .anyRequest().permitAll())
+                        // auth
+                        .requestMatchers("/api/auth/**").permitAll()
+
+                        // tutors
+                        .requestMatchers(HttpMethod.GET, "/api/tutors/**").authenticated()
+                        .requestMatchers("/api/tutors/**").hasRole("TUTOR")
+
+                        // subjects
+                        .requestMatchers("/api/subjects/**").authenticated()
+
+                        //bookings
+                        .requestMatchers( "/api/bookings/**").hasRole("STUDENT")
+
+                        // fallback
+                        .anyRequest().authenticated())
+
                 .httpBasic(basic -> basic.disable())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -50,7 +66,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+        provider.setPasswordEncoder(new BCryptPasswordEncoder(bcryptStrength));
         return provider;
     }
 

@@ -5,17 +5,18 @@ import com.slemanski.backend.features.auth.dto.LoginResponseDto;
 import com.slemanski.backend.features.auth.dto.RegisterRequestDto;
 import com.slemanski.backend.features.auth.exception.InvalidCredentialsException;
 import com.slemanski.backend.features.auth.exception.UserAlreadyExistsException;
+import com.slemanski.backend.features.auth.model.MyUser;
 import com.slemanski.backend.features.auth.model.Role;
+import com.slemanski.backend.features.auth.repository.MyUserRepository;
 import com.slemanski.backend.features.students.model.StudentProfile;
 import com.slemanski.backend.features.students.repository.StudentProfileRepository;
 import com.slemanski.backend.features.tutors.model.TutorProfile;
 import com.slemanski.backend.features.tutors.repository.TutorProfileRepository;
 import com.slemanski.backend.infrastructure.security.jwt.JwtService;
-import com.slemanski.backend.features.auth.model.MyUser;
 import com.slemanski.backend.infrastructure.security.user.MyUserDetails;
-import com.slemanski.backend.features.auth.repository.MyUserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,11 +28,14 @@ import java.util.Objects;
 @Service
 public class AuthService {
 
+    @Value("${security.password.bcrypt.strength}")
+    private int bcryptStrength;
+
     private final MyUserRepository myUserRepository;
     private final AuthenticationManager authManager;
     private final JwtService jwtService;
 
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(bcryptStrength);
     private final StudentProfileRepository studentProfileRepository;
     private final TutorProfileRepository tutorProfileRepository;
 

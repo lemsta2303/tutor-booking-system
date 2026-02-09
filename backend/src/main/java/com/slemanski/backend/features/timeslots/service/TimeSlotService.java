@@ -7,6 +7,7 @@ import com.slemanski.backend.features.timeslots.repository.TimeSlotRepository;
 import com.slemanski.backend.features.tutors.model.TutorProfile;
 import com.slemanski.backend.features.tutors.repository.TutorProfileRepository;
 import com.slemanski.backend.shared.exception.exception.AccessDeniedException;
+import com.slemanski.backend.shared.exception.exception.ConflictException;
 import com.slemanski.backend.shared.exception.exception.InvalidParamsException;
 import com.slemanski.backend.shared.exception.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
@@ -55,7 +56,9 @@ public class TimeSlotService {
             throw new AccessDeniedException("Access denied.");
         }
 
-        // Maybe check if slot is booked in the future and throw exception if it is.
+        if(timeSlotToDelete.get().getBooking() != null) {
+            throw new ConflictException("This time slot is booked!");
+        }
 
         this.timeSlotRepository.delete(timeSlotToDelete.get());
     }
