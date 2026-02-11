@@ -14,6 +14,7 @@ import com.slemanski.backend.features.tutors.model.TutorProfile;
 import com.slemanski.backend.features.tutors.repository.TutorProfileRepository;
 import com.slemanski.backend.infrastructure.security.jwt.JwtService;
 import com.slemanski.backend.infrastructure.security.user.MyUserDetails;
+import com.slemanski.backend.shared.exception.exception.AccessDeniedException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -102,5 +103,11 @@ public class AuthService {
         String token = jwtService.generateToken(userDetails.getUsername(), role);
 
         return new LoginResponseDto(token);
+    }
+
+    public void checkIfUserExists(MyUserDetails user) {
+        if(user == null || user.getUser() == null) {
+            throw new AccessDeniedException("Token is not valid.");
+        }
     }
 }
