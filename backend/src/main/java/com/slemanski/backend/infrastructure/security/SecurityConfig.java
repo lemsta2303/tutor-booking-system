@@ -56,7 +56,7 @@ public class SecurityConfig {
                         .requestMatchers( "/api/bookings/**").hasRole("STUDENT")
 
                         // fallback
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
 
                 .httpBasic(basic -> basic.disable())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

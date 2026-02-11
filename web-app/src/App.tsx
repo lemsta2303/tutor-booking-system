@@ -1,7 +1,8 @@
-import Container from "@mui/material/Container";
+import { RouterProvider } from "react-router";
+import { router } from "src/app/router.tsx";
 
 function App() {
-  return <Container className="bg-red-500">Test</Container>;
+  return <RouterProvider router={router} />;
 }
 
 export default App;

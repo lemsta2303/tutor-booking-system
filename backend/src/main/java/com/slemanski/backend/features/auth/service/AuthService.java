@@ -28,19 +28,23 @@ import java.util.Objects;
 @Service
 public class AuthService {
 
-    @Value("${security.password.bcrypt.strength}")
-    private int bcryptStrength;
-
     private final MyUserRepository myUserRepository;
     private final AuthenticationManager authManager;
     private final JwtService jwtService;
 
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(bcryptStrength);
+    private final BCryptPasswordEncoder encoder;
     private final StudentProfileRepository studentProfileRepository;
     private final TutorProfileRepository tutorProfileRepository;
 
     @Autowired
-    public AuthService(MyUserRepository repo, AuthenticationManager authManager, JwtService jwtService, StudentProfileRepository studentProfileRepository, TutorProfileRepository tutorProfileRepository) {
+    public AuthService(
+            @Value("${security.password.bcrypt.strength}") int bcryptStrength,
+            MyUserRepository repo,
+            AuthenticationManager authManager,
+            JwtService jwtService,
+            StudentProfileRepository studentProfileRepository,
+            TutorProfileRepository tutorProfileRepository) {
+        this.encoder = new BCryptPasswordEncoder(bcryptStrength);
         this.myUserRepository = repo;
         this.authManager = authManager;
         this.jwtService = jwtService;
