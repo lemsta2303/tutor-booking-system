@@ -19,6 +19,7 @@ Core features include secure JWT-based authentication, role-based access control
 ### Backend
 
 -   Java
+-   Maven
 -   Spring Boot
 -   Spring Security
 -   JWT
@@ -66,7 +67,8 @@ security.password.bcrypt.strength=12
 
 ### 2. Start Backend
 
-`cd backend ./mvnw spring-boot:run`
+`cd backend`
+`./mvnw spring-boot:run`
 
 Backend runs on: http://localhost:8080
 
